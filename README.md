@@ -1,6 +1,7 @@
 # Rhtml
 
-TODO: Write a gem description
+A DSL to write html in pure ruby.
+**write test tomorror**
 
 ## Installation
 
@@ -18,7 +19,44 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+html! {
+  body {
+    div(class: "post", id: 1) {
+      title "first post"
+      br
+      p "hello world"
+      div(class: "comment") {
+        p(class: "grey") {
+          "No comments yet."
+        }
+      }
+    }
+  }
+}
+```
+** converted to html **
+
+```html
+<html>
+  <body>
+    <div class='post' id='1'>
+      <title>
+first post
+      </title>
+      <br />
+      <p>
+hello world
+      </p>
+      <div class='comment'>
+        <p class='grey'>
+No comments yet.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
+```
 
 ## Contributing
 

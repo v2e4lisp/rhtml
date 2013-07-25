@@ -10,16 +10,23 @@ class Html
     @content << instance_eval(&b) if block_given?
   end
 
-  def method_missing(tag_name, ps={}, &b)
+  def method_missing(tag_name, ps={}, str=nil,  &b)
+
+    if ps.is_a? String
+      str, ps = ps, {}
+    end
+
     tag_name = tag_name.to_s
     if VOID_TAGS.include? tag_name
-      self.content << void_tag(tag_name, ps)
+      content << void_tag(tag_name, ps)
     else
-      self.content << tag_open(tag_name, ps)
+      content << tag_open(tag_name, ps)
       @indent += 1
-      if block_given?
-        ret = instance_eval(&b)
-        content << INDENT * indent << ret.to_s << "\n" unless ret.is_a?(self.class)
+      if str
+        content << str << "\n"
+      elsif block_given?
+        ret = instance_eval &b
+        content << ret.to_s << "\n" unless ret.is_a?(self.class)
       end
       @indent -= 1
       self.content << tag_close(tag_name)
@@ -28,12 +35,21 @@ class Html
     self
   end
 
+  # conflict with global p method
+  def p(ps={}, &b)
+    method_missing("p", ps, &b)
+  end
+
   def properties ps
-    ps.map { |p| "#{p[0].to_s}='#{p[1].to_s}'" }.join(' ')
+    ps.map { |p| "#{p[0].to_s.gsub("_", "-")}='#{p[1].to_s}'" }.join(' ')
   end
 
   def tag_open tag_name, ps={}
-    "#{INDENT * indent}<#{tag_name} #{properties ps}>\n"
+    if ps.empty?
+      "#{INDENT * indent}<#{tag_name}>\n"
+    else
+      "#{INDENT * indent}<#{tag_name} #{properties ps}>\n"
+    end
   end
 
   def tag_close tag_name
