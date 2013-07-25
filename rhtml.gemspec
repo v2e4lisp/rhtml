@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "rhtml"
   spec.version       = Rhtml::VERSION
   spec.authors       = ["wenjun.yan"]
-  spec.email         = ["wenjun.yan@gree.co.jp"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.email         = ["mylastnameisyan@gmail.com"]
+  spec.description   = %q{write html in ruby , pure ruby.}
+  spec.summary       = %q{writing html in ruby not inserting them in a template...}
   spec.homepage      = ""
   spec.license       = "MIT"
 
