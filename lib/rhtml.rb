@@ -29,11 +29,11 @@ class Html
   end
 
   def properties ps
-    ' ' << ps.map { |p| "#{p[0].to_s}='#{p[1].to_s}'" }.join(' ')
+    ps.map { |p| "#{p[0].to_s}='#{p[1].to_s}'" }.join(' ')
   end
 
   def tag_open tag_name, ps={}
-    "#{INDENT * indent}<#{tag_name}#{properties ps}>\n"
+    "#{INDENT * indent}<#{tag_name} #{properties ps}>\n"
   end
 
   def tag_close tag_name
