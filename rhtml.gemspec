@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Rhtml::VERSION
   spec.authors       = ["wenjun.yan"]
   spec.email         = ["mylastnameisyan@gmail.com"]
-  spec.description   = %q{write html in ruby , pure ruby.}
+  spec.description   = %q{a little dsl that let you write html in ruby , pure ruby.}
   spec.summary       = %q{writing html in ruby not inserting them in a template...}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/v2e4lisp/rhtml"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
