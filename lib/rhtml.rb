@@ -37,7 +37,7 @@ class Html
 
   # conflict with global p method
   def p(ps={}, &b)
-    method_missing("p", ps, &b)
+    method_missing("p", ps, nil, &b)
   end
 
   def properties ps
@@ -58,6 +58,10 @@ class Html
 
   def void_tag tag_name, ps={}
     "#{INDENT * indent}<#{tag_name} #{properties ps}/>\n"
+  end
+
+  def raw string=''
+    @content << string.to_s << "\n"
   end
 
   def to_s
