@@ -1,7 +1,7 @@
 # Rhtml
 
 A DSL to write html in pure ruby.
-**write test tomorror**
+**write test tomorrow**
 
 ## Installation
 
