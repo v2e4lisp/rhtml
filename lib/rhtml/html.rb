@@ -2,17 +2,6 @@ module Rhtml
   class Html
     attr_accessor :content, :indent
 
-    INDENT = '  '
-    VOID_TAGS = %w{area base br col command embed hr img input keygen link meta param source track wbr}
-    TAGS = %w{a abbr acronym address applet area article aside audio b base basefont bdi
-bdo big blockquote body br canvas caption center cite code col colgroup command
-datalist dd del details dfn dialog dir div dl dt em embed fieldset figcaption
-figure font footer form frame frameset h1 head header hgroup hr html i iframe
-img input ins kbd keygen label legend li link map mark menu meta meter nav noframes
-noscript object ol optgroup option output p param pre progress q rp rt ruby s samp
-script section select small source span strike strong style sub summary sup table tbody
-td textarea tfoot th thead time title tr track tt u ul var video wbr}
-
     def initialize(content='', indent=0, &b)
       @indent = 0
       @content = content
@@ -21,21 +10,21 @@ td textarea tfoot th thead time title tr track tt u ul var video wbr}
 
     def tag!(tag_name, ps={}, str=nil,  &b)
       str, ps = ps, {} if ps.is_a? String
-      content << tag_open(tag_name, ps)
+      content << Rhtml.tag_open(tag_name, ps, indent)
       @indent += 1
       if str
-        content << str << "\n"
+        content << INDENT * indent << str << "\n"
       elsif block_given?
         ret = instance_eval &b
-        content << ret.to_s << "\n" unless ret.is_a?(self.class)
+        content << INDENT * indent << ret.to_s << "\n" if ret.is_a?(String)
       end
       @indent -= 1
-      self.content << tag_close(tag_name)
+      self.content << Rhtml.tag_close(tag_name, indent)
       self
     end
 
     def void_tag!(tag_name, ps={})
-      content <<  "#{INDENT * indent}<#{tag_name} #{properties ps}/>\n"
+      content << Rhtml.void_tag(tag_name, ps, indent)
       self
     end
 
