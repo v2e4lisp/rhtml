@@ -20,20 +20,23 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-html! {
+Rhtml.html! {
   body {
     div(class: "post", id: 1) {
       title "first post"
       br
       p "hello world"
       div(class: "comment") {
-        p(class: "grey") {
-          "No comments yet."
-        }
+        (1..5).each do |id|
+          p(class: "grey") {
+            "comment #{id}"
+          }
+        end
       }
     }
   }
 }
+
 ```
 ** converted to html **
 
@@ -42,15 +45,27 @@ html! {
   <body>
     <div class='post' id='1'>
       <title>
-first post
+        first post
       </title>
-      <br />
+      <br/>
       <p>
-hello world
+        hello world
       </p>
       <div class='comment'>
         <p class='grey'>
-No comments yet.
+          comment 1
+        </p>
+        <p class='grey'>
+          comment 2
+        </p>
+        <p class='grey'>
+          comment 3
+        </p>
+        <p class='grey'>
+          comment 4
+        </p>
+        <p class='grey'>
+          comment 5
         </p>
       </div>
     </div>
