@@ -3,6 +3,14 @@ class Html
 
   INDENT = '  '
   VOID_TAGS = %w{area base br col command embed hr img input keygen link meta param source track wbr}
+  TAGS = %w{a abbr acronym address applet area article aside audio b base basefont bdi
+bdo big blockquote body br canvas caption center cite code col colgroup command
+datalist dd del details dfn dialog dir div dl dt em embed fieldset figcaption
+figure font footer form frame frameset h1 head header hgroup hr html i iframe
+img input ins kbd keygen label legend li link map mark menu meta meter nav noframes
+noscript object ol optgroup option output p param pre progress q rp rt ruby s samp
+script section select small source span strike strong style sub summary sup table tbody
+td textarea tfoot th thead time title tr track tt u ul var video wbr}
 
   def initialize(content='', indent=0, &b)
     @indent = 0
@@ -10,34 +18,36 @@ class Html
     @content << instance_eval(&b) if block_given?
   end
 
-  def method_missing(tag_name, ps={}, str=nil,  &b)
-
-    if ps.is_a? String
-      str, ps = ps, {}
+  def tag(tag_name, ps={}, str=nil,  &b)
+    str, ps = ps, {} if ps.is_a? String
+    content << tag_open(tag_name, ps)
+    @indent += 1
+    if str
+      content << str << "\n"
+    elsif block_given?
+      ret = instance_eval &b
+      content << ret.to_s << "\n" unless ret.is_a?(self.class)
     end
-
-    tag_name = tag_name.to_s
-    if VOID_TAGS.include? tag_name
-      content << void_tag(tag_name, ps)
-    else
-      content << tag_open(tag_name, ps)
-      @indent += 1
-      if str
-        content << str << "\n"
-      elsif block_given?
-        ret = instance_eval &b
-        content << ret.to_s << "\n" unless ret.is_a?(self.class)
-      end
-      @indent -= 1
-      self.content << tag_close(tag_name)
-    end
-
+    @indent -= 1
+    self.content << tag_close(tag_name)
     self
   end
 
-  # conflict with global p method
-  def p(ps={}, &b)
-    method_missing("p", ps, nil, &b)
+  def void_tag(tag_name, ps={})
+    content <<  "#{INDENT * indent}<#{tag_name} #{properties ps}/>\n"
+    self
+  end
+
+  TAGS.each do |m|
+    if VOID_TAGS.include? m
+      define_method(m.to_sym) do |ps={}|
+        void_tag(m, ps)
+      end
+    else
+      define_method(m.to_sym) do |ps={}, str=nil, &b|
+        tag(m, ps, str, &b)
+      end
+    end
   end
 
   def properties ps
@@ -54,10 +64,6 @@ class Html
 
   def tag_close tag_name
     "#{INDENT * indent}</#{tag_name}>\n"
-  end
-
-  def void_tag tag_name, ps={}
-    "#{INDENT * indent}<#{tag_name} #{properties ps}/>\n"
   end
 
   def raw string=''
