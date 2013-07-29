@@ -1,7 +1,5 @@
 module Rhtml
   class Html
-    attr_accessor :content, :indent
-
     def initialize(content='', indent=0, &b)
       @indent = 0
       @content = content
@@ -10,21 +8,21 @@ module Rhtml
 
     def tag!(tag_name, ps={}, str=nil,  &b)
       str, ps = ps, {} if ps.is_a? String
-      content << Rhtml.tag_open(tag_name, ps, indent)
+      @content << Rhtml.tag_open(tag_name, ps, @indent)
       @indent += 1
       if str
-        content << INDENT * indent << str << "\n"
+        @content << INDENT * @indent << str << "\n"
       elsif block_given?
         ret = instance_eval &b
-        content << INDENT * indent << ret.to_s << "\n" if ret.is_a?(String)
+        @content << INDENT * @indent << ret.to_s << "\n" if ret.is_a?(String)
       end
       @indent -= 1
-      self.content << Rhtml.tag_close(tag_name, indent)
+      @content << Rhtml.tag_close(tag_name, @indent)
       self
     end
 
     def void_tag!(tag_name, ps={})
-      content << Rhtml.void_tag(tag_name, ps, indent)
+      @content << Rhtml.void_tag(tag_name, ps, @indent)
       self
     end
 
@@ -45,7 +43,7 @@ module Rhtml
     end
 
     def to_s
-      content
+      @content
     end
   end
 end
