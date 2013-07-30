@@ -3,14 +3,17 @@ module Rhtml
     def initialize(content='', indent=0, &b)
       @indent = 0
       @content = content
-      @class_and_id = {class: "" , id: ""}
+      @cls = nil
+      @id = nil
       @content << instance_eval(&b) if block_given?
     end
 
     def tag!(tag_name, ps={}, str=nil,  &b)
       str, ps = ps, {} if ps.is_a? String
-      @content << Rhtml.tag_open(tag_name, ps.merge(@class_and_id), @indent)
-      @class_and_id = {class: "", id: ""}
+      ps[:class] = @cls if @cls
+      ps[:id] = @id if @id
+      @content << Rhtml.tag_open(tag_name, ps, @indent)
+      @cls = @id = nil
       @indent += 1
       if str
         @content << INDENT * @indent << str << "\n"
