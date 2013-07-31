@@ -12,8 +12,10 @@ module Rhtml
       str, ps = ps, {} if ps.is_a? String
       ps[:class] = @cls if @cls
       ps[:id] = @id if @id
+
       @content << Rhtml.tag_open(tag_name, ps, @indent)
       @cls = @id = nil
+
       @indent += 1
       if str
         @content << INDENT * @indent << str << "\n"
@@ -22,6 +24,7 @@ module Rhtml
         @content << INDENT * @indent << ret.to_s << "\n" if ret.is_a?(String)
       end
       @indent -= 1
+
       @content << Rhtml.tag_close(tag_name, @indent)
       self
     end
@@ -45,7 +48,9 @@ module Rhtml
 
     def raw! string=''
       @content << string.to_s << "\n"
+      self
     end
+    alias_method :==, :raw!
 
     def to_s
       @content
