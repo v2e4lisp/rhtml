@@ -1,36 +1,36 @@
 module Rhtml
   class Html
     def initialize(content='', indent=0, &b)
-      @indent = 0
-      @content = content
-      @cls = nil
-      @id = nil
-      @content << instance_eval(&b) if block_given?
+      @__indent = 0
+      @__content = content
+      @__cls = nil
+      @__id = nil
+      instance_eval(&b) if block_given?
     end
 
     def tag!(tag_name, ps={}, str=nil,  &b)
       str, ps = ps, {} if ps.is_a? String
-      ps[:class] = @cls if @cls
-      ps[:id] = @id if @id
+      ps[:class] = @__cls if @__cls
+      ps[:id] = @__id if @__id
 
-      @content << Rhtml.tag_open(tag_name, ps, @indent)
-      @cls = @id = nil
+      @__content << Rhtml.tag_open(tag_name, ps, @__indent)
+      @__cls = @__id = nil
 
-      @indent += 1
+      @__indent += 1
       if str
-        @content << INDENT * @indent << str << "\n"
+        @__content << INDENT * @__indent << str << "\n"
       elsif block_given?
         ret = instance_eval &b
-        @content << INDENT * @indent << ret.to_s << "\n" if ret.is_a?(String)
+        @__content << INDENT * @__indent << ret.to_s << "\n" if ret.is_a?(String)
       end
-      @indent -= 1
+      @__indent -= 1
 
-      @content << Rhtml.tag_close(tag_name, @indent)
+      @__content << Rhtml.tag_close(tag_name, @__indent)
       self
     end
 
     def void_tag!(tag_name, ps={})
-      @content << Rhtml.void_tag(tag_name, ps, @indent)
+      @__content << Rhtml.void_tag(tag_name, ps, @__indent)
       self
     end
 
@@ -47,13 +47,12 @@ module Rhtml
     end
 
     def raw! string=''
-      @content << string.to_s << "\n"
-      self
+      @__content << string.to_s << "\n"
     end
     alias_method :==, :raw!
 
     def to_s
-      @content
+      @__content
     end
   end
 end
