@@ -13,7 +13,7 @@ module Rhtml
       ps[:class] = @__cls if @__cls
       ps[:id] = @__id if @__id
 
-      @__content << Rhtml.tag_open(tag_name, ps, @__indent)
+      @__content << Tag.tag_open(tag_name, ps, @__indent)
       @__cls = @__id = nil
 
       @__indent += 1
@@ -25,17 +25,17 @@ module Rhtml
       end
       @__indent -= 1
 
-      @__content << Rhtml.tag_close(tag_name, @__indent)
+      @__content << Tag.tag_close(tag_name, @__indent)
       self
     end
 
     def void_tag!(tag_name, ps={})
-      @__content << Rhtml.void_tag(tag_name, ps, @__indent)
+      @__content << Tag.void_tag(tag_name, ps, @__indent)
       self
     end
 
-    TAGS.each do |m|
-      if VOID_TAGS.include? m
+    Tag::TAGS.each do |m|
+      if Tag::VOID_TAGS.include? m
         define_method(m.to_sym) do |ps={}|
           void_tag!(m, ps)
         end
