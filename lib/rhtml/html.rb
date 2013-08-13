@@ -3,18 +3,14 @@ module Rhtml
     def initialize(content='', indent=0, &b)
       @__indent = 0
       @__content = content
-      @__cls = nil
-      @__id = nil
+      @__ps = {}
       instance_eval(&b) if block_given?
     end
 
     def tag!(tag_name, ps={}, str=nil,  &b)
       str, ps = ps, {} if ps.is_a? String
-      ps[:class] = @__cls if @__cls
-      ps[:id] = @__id if @__id
-
+      @__ps.each{ |k, v| ps[k] = ps[k] ? "#{ps[k]} #{v}" : v }.clear
       @__content << Tag.tag_open(tag_name, ps, @__indent)
-      @__cls = @__id = nil
 
       @__indent += 1
       if str
