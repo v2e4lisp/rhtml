@@ -9,7 +9,11 @@ module Rhtml
 
     def tag!(tag_name, ps={}, str=nil,  &b)
       str, ps = ps, {} if ps.is_a? String
-      @__ps.each{ |k, v| ps[k] = ps[k] ? "#{ps[k]} #{v}" : v }.clear
+      # merge the default (@__ps) to current properties except for class.
+      # the default class will be append to current classes
+      ps[:class] << " #{@__ps[:class]}"  if @__ps[:class] and ps[:class]
+      ps = @__ps.merge ps
+      @__ps.clear
       @__content << Tag.tag_open(tag_name, ps, @__indent)
 
       @__indent += 1
