@@ -1,7 +1,7 @@
 module Rhtml
   class Html
     def initialize(content='', indent=0, &b)
-      @__indent = 0
+      @__indent = indent
       @__content = content
       @__ps = {}
       instance_eval(&b) if block_given?
@@ -47,7 +47,7 @@ module Rhtml
     end
 
     def raw! string=''
-      @__content << string.to_s << "\n"
+      @__content << string.to_s << "\n" and nil
     end
     alias_method :==, :raw!
 
